@@ -5,12 +5,20 @@
 import re
 from flask import Flask, request
 import telegram
+
+import os, time
+
+import telebot.actions as actions
 from telebot.credentials import bot_token, bot_user_name, URL, allowed_unames
 
 global bot
 global TOKEN
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
+
+# set timezone to AR
+os.environ['TZ'] = 'America/Argentina/Buenos_Aires'
+time.tzset()
 
 # start the flask app
 app = Flask(__name__)
@@ -29,6 +37,8 @@ def respond():
 	# 	'first_name': 'Julián'}}, 
 	# 'update_id': 959213294}
 
+	print(time.now())
+
 	try:
 		chat_id = update.message.chat.id
 		msg_id = update.message.message_id
@@ -37,12 +47,10 @@ def respond():
 		# cannot send a message, exiting
 		return 'error'
 
-	# Check if sender is jtallar or nicoManija
+	# Only allowed usernames can talk to the bot
 	if sender_uname not in allowed_unames:
 		# send a rejection message
-		reject_message = "You are not allowed to talk to me"
-		bot.sendChatAction(chat_id=chat_id, action="typing")
-		bot.sendMessage(chat_id=chat_id, text=reject_message, reply_to_message_id=msg_id)
+		actions.send_message(bot, chat_id, msg_id, "You are not allowed to talk to me")
 
 		return 'ok'
 
@@ -54,25 +62,22 @@ def respond():
 	if text == "/start":
 		# print the welcoming message
 		bot_welcome = """
-		Welcome to coolAvatar bot, the bot is using the service from http://avatars.adorable.io/ to generate cool looking avatars based on the name you enter so please enter a name and the bot will reply with an avatar for your name.
+		Welcome to BookEtios bot, use ... to ... and ... to ... .
 		"""
-     	# send the welcoming message
-		bot.sendChatAction(chat_id=chat_id, action="typing")
-		bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
+     	# send a welcoming message
+		actions.send_message(bot, chat_id, msg_id, bot_welcome)
 
 	else:
 		try:
 			# clear the message we got from any non alphabets
 			text = re.sub(r"\W", "_", text)
 			# create the api link for the avatar based on http://avatars.adorable.io/
-			url = "https://api.adorable.io/avatars/285/{}.png".format(text.strip())
+			photo_url = "https://api.adorable.io/avatars/285/{}.png".format(text.strip())
 			# reply with a photo to the name the user sent,
-			# note that you can send photos by url and telegram will fetch it for you
-			bot.sendChatAction(chat_id=chat_id, action="upload_photo")
-			bot.sendPhoto(chat_id=chat_id, photo=url, reply_to_message_id=msg_id)
+			actions.send_photo(bot, chat_id, msg_id, photo_url)
 		except Exception:
 			# if things went wrong
-			bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name", reply_to_message_id=msg_id)
+			actions.send_message(bot, chat_id, msg_id, "There was a problem in the name you used, please enter different name")
 
 	return 'ok'
 
