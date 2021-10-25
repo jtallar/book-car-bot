@@ -20,7 +20,7 @@ def respond():
 	# retrieve the message in JSON and then transform it to Telegram object
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
 
-	print("update:", update.message['from'])
+	print("update:", update.message.from_user)
 	# 2021-10-25T17:22:32.990375+00:00 app[web.1]: update: {'message': {'delete_chat_photo': False, 'photo': [], 
 	# 'chat': {'type': 'private', 'first_name': 'Julián', 'username': 'jtallar', 'last_name': 'Tallar', 'id': 1533769371}, 
 	# 'channel_chat_created': False, 'group_chat_created': False, 'caption_entities': [], 'text': 'Message', 
