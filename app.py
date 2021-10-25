@@ -5,7 +5,7 @@
 import re
 from flask import Flask, request
 import telegram
-from telebot.credentials import bot_token, bot_user_name,URL
+from telebot.credentials import bot_token, bot_user_name, URL, allowed_unames
 
 global bot
 global TOKEN
@@ -20,7 +20,6 @@ def respond():
 	# retrieve the message in JSON and then transform it to Telegram object
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
 
-	print("update:", update.message.from_user)
 	# 2021-10-25T17:22:32.990375+00:00 app[web.1]: update: {'message': {'delete_chat_photo': False, 'photo': [], 
 	# 'chat': {'type': 'private', 'first_name': 'Julián', 'username': 'jtallar', 'last_name': 'Tallar', 'id': 1533769371}, 
 	# 'channel_chat_created': False, 'group_chat_created': False, 'caption_entities': [], 'text': 'Message', 
@@ -32,16 +31,16 @@ def respond():
 
 	chat_id = update.message.chat.id
 	msg_id = update.message.message_id
-	# sender_uname = update.message['from'].username
+	sender_uname = update.message.from_user['username']
 
-	# # Check if sender is jtallar or nicoManija
-	# if sender_uname != 'jtallar' and sender_uname != 'nicoManija':
-	# 	# send a rejection message
-	# 	reject_message = "You are not allowed to talk to me"
-	# 	bot.sendChatAction(chat_id=chat_id, action="typing")
-	# 	bot.sendMessage(chat_id=chat_id, text=reject_message, reply_to_message_id=msg_id)
+	# Check if sender is jtallar or nicoManija
+	if sender_uname not in allowed_unames:
+		# send a rejection message
+		reject_message = "You are not allowed to talk to me"
+		bot.sendChatAction(chat_id=chat_id, action="typing")
+		bot.sendMessage(chat_id=chat_id, text=reject_message, reply_to_message_id=msg_id)
 
-	# 	return 'ok'
+		return 'ok'
 
 	# Telegram understands UTF-8, so encode text for unicode compatibility
 	text = update.message.text.encode('utf-8').decode()
