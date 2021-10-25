@@ -34,12 +34,8 @@ def respond():
 		msg_id = update.message.message_id
 		sender_uname = update.message.from_user['username']
 	except AttributeError:
-		# send a rejection message
-		reject_message = "Invalid message"
-		bot.sendChatAction(chat_id=chat_id, action="typing")
-		bot.sendMessage(chat_id=chat_id, text=reject_message, reply_to_message_id=msg_id)
-
-		return 'ok'
+		# cannot send a message, exiting
+		return 'error'
 
 	# Check if sender is jtallar or nicoManija
 	if sender_uname not in allowed_unames:
