@@ -134,5 +134,5 @@ dmypy.json
 # Visual Studio Code Folder
 .vscode/
 
-# Credentials file
+# Credentials file --> UNCOMMENT ONLY WHEN DEPLOYING TO MY GITHUB, NOT HEROKU
 # credentials.py
