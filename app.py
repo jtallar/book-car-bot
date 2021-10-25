@@ -6,7 +6,8 @@ import re
 from flask import Flask, request
 import telegram
 
-import datetime, pytz
+from datetime import datetime
+import pytz
 
 import telebot.actions as actions
 from telebot.credentials import bot_token, bot_user_name, URL, allowed_unames
