@@ -6,7 +6,7 @@ import re
 from flask import Flask, request
 import telegram
 
-import os, time
+import datetime, pytz
 
 import telebot.actions as actions
 from telebot.credentials import bot_token, bot_user_name, URL, allowed_unames
@@ -15,10 +15,6 @@ global bot
 global TOKEN
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
-
-# set timezone to AR
-os.environ['TZ'] = 'America/Argentina/Buenos_Aires'
-time.tzset()
 
 # start the flask app
 app = Flask(__name__)
@@ -37,7 +33,9 @@ def respond():
 	# 	'first_name': 'Julián'}}, 
 	# 'update_id': 959213294}
 
-	print(time.now())
+	timezone = pytz.timezone('America/Argentina/Buenos_Aires')
+
+	print(time.localize(datetime.now()))
 
 	try:
 		chat_id = update.message.chat.id
