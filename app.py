@@ -35,7 +35,7 @@ def respond():
 
 	timezone = pytz.timezone('America/Argentina/Buenos_Aires')
 
-	print(time.localize(datetime.now()))
+	print(timezone.localize(datetime.now()))
 
 	try:
 		chat_id = update.message.chat.id
