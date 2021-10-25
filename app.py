@@ -32,16 +32,16 @@ def respond():
 
 	chat_id = update.message.chat.id
 	msg_id = update.message.message_id
-	sender_uname = update.message['from'].username
+	# sender_uname = update.message['from'].username
 
-	# Check if sender is jtallar or nicoManija
-	if sender_uname != 'jtallar' and sender_uname != 'nicoManija':
-		# send a rejection message
-		reject_message = "You are not allowed to talk to me"
-		bot.sendChatAction(chat_id=chat_id, action="typing")
-		bot.sendMessage(chat_id=chat_id, text=reject_message, reply_to_message_id=msg_id)
+	# # Check if sender is jtallar or nicoManija
+	# if sender_uname != 'jtallar' and sender_uname != 'nicoManija':
+	# 	# send a rejection message
+	# 	reject_message = "You are not allowed to talk to me"
+	# 	bot.sendChatAction(chat_id=chat_id, action="typing")
+	# 	bot.sendMessage(chat_id=chat_id, text=reject_message, reply_to_message_id=msg_id)
 
-		return 'ok'
+	# 	return 'ok'
 
 	# Telegram understands UTF-8, so encode text for unicode compatibility
 	text = update.message.text.encode('utf-8').decode()
