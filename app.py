@@ -4,6 +4,10 @@
 # import everything
 import re
 from flask import Flask, request
+
+# start the flask app
+app = Flask(__name__)
+
 import telegram
 from telebot.credentials import bot_token, bot_user_name,URL
 
@@ -11,9 +15,6 @@ global bot
 global TOKEN
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
-
-# start the flask app
-app = Flask(__name__)
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
