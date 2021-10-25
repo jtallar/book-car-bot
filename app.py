@@ -21,9 +21,27 @@ def respond():
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
 
 	print("update:", update)
+	# 2021-10-25T17:22:32.990375+00:00 app[web.1]: update: {'message': {'delete_chat_photo': False, 'photo': [], 
+	# 'chat': {'type': 'private', 'first_name': 'Julián', 'username': 'jtallar', 'last_name': 'Tallar', 'id': 1533769371}, 
+	# 'channel_chat_created': False, 'group_chat_created': False, 'caption_entities': [], 'text': 'Message', 
+	# 'date': 1635182552, 'entities': [], 'new_chat_photo': [], 'new_chat_members': [], 'message_id': 9, 
+	# 'supergroup_chat_created': False, 
+	# 'from': {'username': 'jtallar', 'is_bot': False, 'last_name': 'Tallar', 'id': 1533769371, 'language_code': 'es', 
+	# 	'first_name': 'Julián'}}, 
+	# 'update_id': 959213294}
 
 	chat_id = update.message.chat.id
 	msg_id = update.message.message_id
+	sender_uname = update['from'].username
+
+	# Check if sender is jtallar or nicoManija
+	if sender_uname != 'jtallar' and sender_uname != 'nicoManija':
+		# send a rejection message
+		reject_message = "You are not allowed to talk to me"
+		bot.sendChatAction(chat_id=chat_id, action="typing")
+		bot.sendMessage(chat_id=chat_id, text=reject_message, reply_to_message_id=msg_id)
+
+		return 'ok'
 
 	# Telegram understands UTF-8, so encode text for unicode compatibility
 	text = update.message.text.encode('utf-8').decode()
