@@ -20,6 +20,8 @@ def respond():
 	# retrieve the message in JSON and then transform it to Telegram object
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
 
+	print("update:", update)
+
 	chat_id = update.message.chat.id
 	msg_id = update.message.message_id
 
@@ -51,7 +53,7 @@ def respond():
 			# if things went wrong
 			bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name", reply_to_message_id=msg_id)
 
-   return 'ok'
+	return 'ok'
 
 @app.route('/setwebhook', methods=['GET', 'POST'])
 def set_webhook():
