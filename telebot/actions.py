@@ -53,7 +53,7 @@ def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
 def get_booked(msg_obj: Message, beg: datetime):
     print(f'Args - beg: {beg}')
     # Get beg's booked
-    ## Find one with beg
+    ## Find one with beg? Or find all booked from beg to beg+1 (if its a date)?
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
