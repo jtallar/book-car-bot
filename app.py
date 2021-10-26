@@ -91,6 +91,15 @@ def respond():
 
 		actions.unbook(msg_obj, actions.get_datetime(args_vec[1]))
 
+	# confirm(from: datetime)
+	elif command == "/confirm":
+		if len(args_vec) < 2:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			return 'ok'
+
+		actions.confirm(msg_obj, actions.get_datetime(args_vec[1]))
+
 	# my_booked()
 	elif command == "/myBooked":
 		actions.my_booked(msg_obj)

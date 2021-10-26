@@ -20,10 +20,11 @@ def send_photo(bot, chat_id, msg_id, photo_url):
 def start(msg_obj: Message):
     bot_welcome = """
 		Welcome to BookEtios bot, available commands are: \n
-        - /book from to [certain] --> /book 2021-10-25T00:05:00 2021-10-25T00:09:00 true
+        - /book from to [certain] --> /book 2021-10-25T00:05:00 2021-10-25T00:09:00 false
         - /getBooked from --> /getBooked 2021-10-25
-        - /unbook from --> /unbook 2021-10-25
+        - /unbook from --> /unbook 2021-10-25T00:05:00
         - /myBooked --> /myBooked
+        - /confirm from --> /confirm 2021-10-25T00:05:00
 		"""
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, bot_welcome)
 
@@ -54,6 +55,11 @@ def unbook(msg_obj: Message, beg: datetime):
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
 def my_booked(msg_obj: Message):
+    # Get msg_obj.sender_uname booked
+
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
+
+def confirm(msg_obj: Message, beg: datetime):
     # Get msg_obj.sender_uname booked
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
