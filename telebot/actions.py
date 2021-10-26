@@ -39,7 +39,7 @@ def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
-def get_booked(msg_obj: Message, beg: date):
+def get_booked(msg_obj: Message, beg: datetime):
     print(f'Args - beg: {beg}')
     # Get beg's booked
 
