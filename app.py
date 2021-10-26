@@ -25,17 +25,8 @@ def respond():
 	# retrieve the message in JSON and then transform it to Telegram object
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
 
-	# 2021-10-25T17:22:32.990375+00:00 app[web.1]: update: {'message': {'delete_chat_photo': False, 'photo': [], 
-	# 'chat': {'type': 'private', 'first_name': 'Julián', 'username': 'jtallar', 'last_name': 'Tallar', 'id': 1533769371}, 
-	# 'channel_chat_created': False, 'group_chat_created': False, 'caption_entities': [], 'text': 'Message', 
-	# 'date': 1635182552, 'entities': [], 'new_chat_photo': [], 'new_chat_members': [], 'message_id': 9, 
-	# 'supergroup_chat_created': False, 
-	# 'from': {'username': 'jtallar', 'is_bot': False, 'last_name': 'Tallar', 'id': 1533769371, 'language_code': 'es', 
-	# 	'first_name': 'Julián'}}, 
-	# 'update_id': 959213294}
-
+	# get current timezone - should be moved to actions
 	timezone = pytz.timezone('America/Argentina/Buenos_Aires')
-
 	print(timezone.localize(datetime.now()))
 
 	try:
@@ -55,28 +46,58 @@ def respond():
 
 	# Telegram understands UTF-8, so encode text for unicode compatibility
 	text = update.message.text.encode('utf-8').decode()
+
+	msg_obj = actions.Message(bot, chat_id, msg_id, sender_uname, text)
+
 	# for debugging purposes only
 	print("got text message :", text)
-	# the first time you chat with the bot AKA the welcoming message
-	if text == "/start":
-		# print the welcoming message
-		bot_welcome = """
-		Welcome to BookEtios bot, use ... to ... and ... to ... .
-		"""
-     	# send a welcoming message
-		actions.send_message(bot, chat_id, msg_id, bot_welcome)
+
+	args_vec = text.split()
+	command = args_vec[0]
+
+	# start()
+	if command == "/start":
+		actions.start(msg_obj)
+
+	# book(from: datetime, to: datetime, certain: bool = True)
+	elif command == "/book":
+		if len(args_vec) < 3:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			return 'ok'
+
+		actions.book(
+			msg_obj, 
+			actions.get_datetime(args_vec[1]), 
+			actions.get_datetime(args_vec[2]), 
+			False if len(args_vec) >= 4 and args_vec[3].lower() == 'false' else True
+		)
+	
+	# get_booked(from: date)
+	elif command == "/getBooked":
+		if len(args_vec) < 2:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			return 'ok'
+
+		actions.get_booked(msg_obj, actions.get_datetime(args_vec[1]))
+	
+	# unbook(from: datetime)
+	elif command == "/unbook":
+		if len(args_vec) < 2:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			return 'ok'
+
+		actions.unbook(msg_obj, actions.get_datetime(args_vec[1]))
+
+	# my_booked()
+	elif command == "/myBooked":
+		actions.my_booked(msg_obj)
 
 	else:
-		try:
-			# clear the message we got from any non alphabets
-			text = re.sub(r"\W", "_", text)
-			# create the api link for the avatar based on http://avatars.adorable.io/
-			photo_url = "https://api.adorable.io/avatars/285/{}.png".format(text.strip())
-			# reply with a photo to the name the user sent,
-			actions.send_photo(bot, chat_id, msg_id, photo_url)
-		except Exception:
-			# if things went wrong
-			actions.send_message(bot, chat_id, msg_id, "There was a problem in the name you used, please enter different name")
+		# send a welcoming message
+		actions.send_message(bot, chat_id, msg_id, "Invalid command")
 
 	return 'ok'
 
