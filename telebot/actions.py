@@ -31,10 +31,20 @@ def start(msg_obj: Message):
 def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     print(f'Args - beg: {beg} - end: {end} - certain: {certain}')
     # Check if beg < end
+    if beg >= end:
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Invalid dates")
+        return
 
     # Check if slot is available
+    ## Find collision with new slot
+    ## Slot is not available if exists X such that
+    ### (begPrevX <= beg <= endPrevX) ||
+    ### (begPrevX <= end <= endPrevX) ||
+    ### (beg <= begPrevX <= end) ||
+    ### (beg <= endPrevX <= end)
 
     # Book slot
+    ## Insert into MongoDB
 
     # Send book confirmation
 
@@ -43,27 +53,41 @@ def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
 def get_booked(msg_obj: Message, beg: datetime):
     print(f'Args - beg: {beg}')
     # Get beg's booked
+    ## Find one with beg
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
 def unbook(msg_obj: Message, beg: datetime):
     print(f'Args - beg: {beg}')
     # Check if beg is booked by msg_obj.sender_uname
+    ## Find one with beg
+    ## Check owner
 
     # Unbook slot
+    ## Delete from MongoDB
+    ### Could be a delete IF? And avoid the get
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
 def my_booked(msg_obj: Message):
     # Get msg_obj.sender_uname booked
+    ## Find all by username from the future
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
 def confirm(msg_obj: Message, beg: datetime):
     # Get msg_obj.sender_uname booked
+    ## Find one with beg
+    ## Check owner
+
+    # Confirm slot
+    ## Modify from MongoDB
+    ### Could be a modify IF? And avoid the get
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
 # TODO: Add today, tomorrow, etc
 def get_datetime(text: str):
+    ## ACA ES donde se usa el timezone
+    ## Now es now de aca
     return datetime.fromisoformat(text)
