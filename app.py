@@ -45,7 +45,7 @@ def respond():
 		return 'ok'
 
 	# Telegram understands UTF-8, so encode text for unicode compatibility
-	text = update.message.text.encode('utf-8').decode()
+	text = update.message.text.encode('utf-8').decode().lower()
 
 	msg_obj = actions.Message(bot, chat_id, msg_id, sender_uname, text)
 
@@ -70,7 +70,7 @@ def respond():
 			msg_obj, 
 			actions.get_datetime(args_vec[1]), 
 			actions.get_datetime(args_vec[2]), 
-			False if len(args_vec) >= 4 and args_vec[3].lower() == 'false' else True
+			False if len(args_vec) >= 4 and args_vec[3] == 'false' else True
 		)
 	
 	# get_booked(from: date)
