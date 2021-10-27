@@ -71,7 +71,7 @@ def respond():
 	command = args_vec[0]
 
 	# start()
-	if command == "/start":
+	if command == "/start" or command == "/help":
 		actions.start(msg_obj)
 
 	# book(from: datetime, to: datetime, certain: bool = True)
@@ -103,7 +103,14 @@ def respond():
 			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
 			return 'ok'
 
-		actions.get_booked(msg_obj, actions.get_datetime(args_vec[1]))
+		try:
+			beg_date = actions.get_datetime(args_vec[1])
+		except ValueError:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Invalid date")
+			return 'ok'
+
+		actions.get_booked(msg_obj, beg_date)
 	
 	# unbook(from: datetime)
 	elif command == "/unbook":
@@ -112,7 +119,14 @@ def respond():
 			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
 			return 'ok'
 
-		actions.unbook(msg_obj, actions.get_datetime(args_vec[1]))
+		try:
+			beg_date = actions.get_datetime(args_vec[1])
+		except ValueError:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Invalid date")
+			return 'ok'
+
+		actions.unbook(msg_obj, beg_date)
 
 	# confirm(from: datetime)
 	elif command == "/confirm":
@@ -121,7 +135,14 @@ def respond():
 			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
 			return 'ok'
 
-		actions.confirm(msg_obj, actions.get_datetime(args_vec[1]))
+		try:
+			beg_date = actions.get_datetime(args_vec[1])
+		except ValueError:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Invalid date")
+			return 'ok'
+
+		actions.confirm(msg_obj, beg_date)
 
 	# my_booked()
 	elif command == "/myBooked":

@@ -36,6 +36,7 @@ def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     print(f'Args - beg: {beg} - end: {end} - certain: {certain}')
 
     print(timezone.localize(datetime.now()))
+    print(datetime.now())
 
     # Check if beg < end and beg >= now
     if beg >= end or beg < timezone.localize(datetime.now()):
