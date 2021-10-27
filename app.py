@@ -1,10 +1,14 @@
-# Code based on tutorial form Toptal 
+# Code based on tutorial from Toptal 
 # https://www.toptal.com/python/telegram-bot-tutorial-python
+# And tutorial from MongoDB
+# https://www.mongodb.com/developer/how-to/use-atlas-on-heroku/
 
 # import everything
 import re
+import os
 from flask import Flask, request
 import telegram
+from pymongo import MongoClient
 
 from datetime import datetime
 import pytz
@@ -19,6 +23,14 @@ bot = telegram.Bot(token=TOKEN)
 
 # start the flask app
 app = Flask(__name__)
+
+# connecting to MongoDB
+mongodb_url = os.environ.get('MONGODB_URI', None)
+if not mongodb_url:
+	mongodb_url = "mongodb+srv://username:password@booketioseast.h4nxa.mongodb.net/database?retryWrites=true&w=majority"
+
+client = pymongo.MongoClient(mongodb_url)
+db = client.bookings
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
