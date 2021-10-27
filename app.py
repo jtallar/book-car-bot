@@ -8,7 +8,7 @@ import re
 import os
 from flask import Flask, request
 import telegram
-from pymongo import MongoClient
+import pymongo
 
 from datetime import datetime
 import pytz
@@ -29,8 +29,18 @@ mongodb_url = os.environ.get('MONGODB_URI', None)
 if not mongodb_url:
 	mongodb_url = "mongodb+srv://username:password@booketioseast.h4nxa.mongodb.net/database?retryWrites=true&w=majority"
 
-client = MongoClient(mongodb_url)
+client = pymongo.MongoClient(mongodb_url)
 db = client.bookings
+
+# MongoDB documentes will be in the form
+# {
+# 	'_id': Date(beg_date),
+# 	'end': Date(end_date),
+# 	'username': 'username',
+# 	'confirmed': true
+# }
+# create secondary index for end 
+bookings.etios.create_index([("end", pymongo.DESCENDING)])
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
