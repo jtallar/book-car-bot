@@ -38,6 +38,7 @@ def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     now_date = timezone.localize(datetime.now())
     print(now_date)
     print(datetime.now())
+    print(datetime.now(timezone))
 
     # Check if beg < end and beg >= now
     if beg >= end or beg < now_date:
