@@ -81,10 +81,18 @@ def respond():
 			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
 			return 'ok'
 
+		try:
+			beg_date = actions.get_datetime(args_vec[1])
+			end_date = actions.get_datetime(args_vec[2])
+		except ValueError:
+			# send a missing params message
+			actions.send_message(bot, chat_id, msg_id, "Invalid dates")
+			return 'ok'
+
 		actions.book(
 			msg_obj, 
-			actions.get_datetime(args_vec[1]), 
-			actions.get_datetime(args_vec[2]), 
+			beg_date, 
+			end_date, 
 			False if len(args_vec) >= 4 and args_vec[3] == 'false' else True
 		)
 	
