@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 # get current timezone
@@ -35,10 +35,7 @@ def start(msg_obj: Message):
 def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     print(f'Args - beg: {beg} - end: {end} - certain: {certain}')
 
-    now_date = timezone.localize(datetime.now())
-    print(now_date)
-    print(datetime.now())
-    print(datetime.now(timezone))
+    now_date = get_now_datetime()
 
     # Check if beg < end and beg >= now
     if beg >= end or beg < now_date:
@@ -96,8 +93,15 @@ def confirm(msg_obj: Message, beg: datetime):
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
-# TODO: Add today, tomorrow, etc
 def get_datetime(text: str):
-    ## ACA ES donde se usa el timezone
-    ## Now es now de aca
+    if text == 'today' or text == 'hoy':
+        return get_now_datetime()
+    elif text == 'tomorrow' or text == 'mañana':
+        return get_now_datetime() + timedelta(days=1)
+    elif text == 'day after tomorrow' or text == 'pasado':
+        return get_now_datetime() + timedelta(days=2)
+
     return timezone.localize(datetime.fromisoformat(text))
+
+def get_now_datetime():
+    return datetime.now(timezone)
