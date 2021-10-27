@@ -29,7 +29,7 @@ mongodb_url = os.environ.get('MONGODB_URI', None)
 if not mongodb_url:
 	mongodb_url = "mongodb+srv://username:password@booketioseast.h4nxa.mongodb.net/database?retryWrites=true&w=majority"
 
-client = pymongo.MongoClient(mongodb_url)
+client = MongoClient(mongodb_url)
 db = client.bookings
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
