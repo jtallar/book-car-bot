@@ -39,8 +39,8 @@ db = client.bookings
 # 	'username': 'username',
 # 	'confirmed': true
 # }
-# create secondary index for end 
-bookings.etios.create_index([("end", pymongo.DESCENDING)])
+# create secondary index for end in collection 'etios'
+db.etios.create_index([("end", pymongo.DESCENDING)])
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
