@@ -1,4 +1,8 @@
 from datetime import datetime
+import pytz
+
+# get current timezone
+timezone = pytz.timezone('America/Argentina/Buenos_Aires')
 
 class Message(object):
     def __init__(self, bot, chat_id, msg_id, sender_uname, text):
@@ -30,8 +34,11 @@ def start(msg_obj: Message):
 
 def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     print(f'Args - beg: {beg} - end: {end} - certain: {certain}')
-    # Check if beg < end
-    if beg >= end:
+
+    print(timezone.localize(datetime.now()))
+
+    # Check if beg < end and beg >= now
+    if beg >= end or beg < timezone.localize(datetime.now()):
         send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Invalid dates")
         return
 

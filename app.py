@@ -10,9 +10,6 @@ from flask import Flask, request
 import telegram
 import pymongo
 
-from datetime import datetime
-import pytz
-
 import telebot.actions as actions
 from telebot.credentials import bot_token, bot_user_name, URL, allowed_unames
 
@@ -46,10 +43,6 @@ db.etios.create_index([("end", pymongo.DESCENDING)])
 def respond():
 	# retrieve the message in JSON and then transform it to Telegram object
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
-
-	# get current timezone - should be moved to actions
-	timezone = pytz.timezone('America/Argentina/Buenos_Aires')
-	print(timezone.localize(datetime.now()))
 
 	try:
 		chat_id = update.message.chat.id
