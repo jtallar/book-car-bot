@@ -35,11 +35,12 @@ def start(msg_obj: Message):
 def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     print(f'Args - beg: {beg} - end: {end} - certain: {certain}')
 
-    print(timezone.localize(datetime.now()))
+    now_date = timezone.localize(datetime.now())
+    print(now_date)
     print(datetime.now())
 
     # Check if beg < end and beg >= now
-    if beg >= end or beg < timezone.localize(datetime.now()):
+    if beg >= end or beg < now_date:
         send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Invalid dates")
         return
 
@@ -98,4 +99,4 @@ def confirm(msg_obj: Message, beg: datetime):
 def get_datetime(text: str):
     ## ACA ES donde se usa el timezone
     ## Now es now de aca
-    return datetime.fromisoformat(text)
+    return timezone.localize(datetime.fromisoformat(text))
