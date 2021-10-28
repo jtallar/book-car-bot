@@ -105,7 +105,7 @@ def get_booked(db, msg_obj: Message, beg: datetime):
             ] }
         ] }).sort("_id", 1)
 
-    response = f'Bookings for {print_datetime(beg)}: \n'
+    response = f'Bookings from {print_datetime(beg)} to {print_datetime(end)}: \n'
     response += print_bookings_list(bookings)
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
@@ -150,7 +150,7 @@ def confirm(db, msg_obj: Message, beg: datetime):
             { "_id" : beg },  
             { "username" : msg_obj.sender_uname } 
         ] }, 
-        { "$set": { "confirmed": true } })
+        { "$set": { "confirmed": True } })
 
     if update_resp.modified_count == 0:
         # booking does not exist
@@ -176,7 +176,7 @@ def shift_timezone(date_obj: datetime):
     return date_obj.astimezone(timezone)
 
 def print_datetime(date_obj: datetime):
-    return date_obj.strftime("%A %d %b %Y, %H:%M")
+    return date_obj.strftime("%A %d %b %Y %H:%M")
 
 def print_bookings_list(bookings_list):
     response = ""
@@ -184,6 +184,6 @@ def print_bookings_list(bookings_list):
         response += f"\\- From {print_datetime(shift_timezone(booking.get('_id')))}" 
         response += f" to {print_datetime(shift_timezone(booking.get('end')))}"
         response += f" _by {booking.get('username')}_," 
-        response += f"*{'confirmed' if booking.get('confirmed') else 'NOT certain'}*\n"
+        response += f" *{'confirmed' if booking.get('confirmed') else 'NOT certain'}*\n"
 
     return response
