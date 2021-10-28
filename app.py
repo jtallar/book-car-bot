@@ -55,7 +55,7 @@ def respond():
 	# Only allowed usernames can talk to the bot
 	if sender_uname not in allowed_unames:
 		# send a rejection message
-		actions.send_message(bot, chat_id, msg_id, "You are not allowed to talk to me")
+		actions.send_message(bot, chat_id, msg_id, "👮 You are not allowed to talk to me")
 
 		return 'ok'
 
@@ -78,7 +78,7 @@ def respond():
 	elif command == "/book":
 		if len(args_vec) < 3:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
 			return 'ok'
 
 		try:
@@ -86,7 +86,7 @@ def respond():
 			end_date = actions.get_datetime(args_vec[2])
 		except ValueError:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Invalid dates")
+			actions.send_message(bot, chat_id, msg_id, "❌ Invalid dates ❌")
 			return 'ok'
 
 		actions.book(
@@ -101,14 +101,14 @@ def respond():
 	elif command == "/getbooked":
 		if len(args_vec) < 2:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
 			return 'ok'
 
 		try:
 			beg_date = actions.get_datetime(args_vec[1])
 		except ValueError:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Invalid date")
+			actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")
 			return 'ok'
 
 		actions.get_booked(db, msg_obj, beg_date)
@@ -117,14 +117,14 @@ def respond():
 	elif command == "/unbook":
 		if len(args_vec) < 2:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
 			return 'ok'
 
 		try:
 			beg_date = actions.get_datetime(args_vec[1])
 		except ValueError:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Invalid date")
+			actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")
 			return 'ok'
 
 		actions.unbook(db, msg_obj, beg_date)
@@ -133,14 +133,14 @@ def respond():
 	elif command == "/confirm":
 		if len(args_vec) < 2:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
+			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
 			return 'ok'
 
 		try:
 			beg_date = actions.get_datetime(args_vec[1])
 		except ValueError:
 			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "Invalid date")
+			actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")
 			return 'ok'
 
 		actions.confirm(db, msg_obj, beg_date)
@@ -151,7 +151,7 @@ def respond():
 
 	else:
 		# send a welcoming message
-		actions.send_message(bot, chat_id, msg_id, "Invalid command")
+		actions.send_message(bot, chat_id, msg_id, "❌ Invalid command ❌")
 
 	return 'ok'
 
