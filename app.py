@@ -90,6 +90,7 @@ def respond():
 			return 'ok'
 
 		actions.book(
+			db,
 			msg_obj, 
 			beg_date, 
 			end_date, 
