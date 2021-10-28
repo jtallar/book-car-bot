@@ -121,7 +121,7 @@ def unbook(db, msg_obj: Message, beg: datetime):
 
     if delete_resp.deleted_count == 0:
         # booking does not exist
-        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "No booking found!")
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "❌ No booking found!")
         return
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Unbooked successfully!")
@@ -133,7 +133,7 @@ def my_booked(db, msg_obj: Message):
     ## Find all by username from the future
     bookings = db.etios.find({  
         "$and": [   
-            { "_id" : { "$gte": now_date } },  
+            { "end" : { "$gte": now_date } },  
             { "username" : msg_obj.sender_uname } ] 
         }).sort("_id", 1)
 
