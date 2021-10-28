@@ -80,7 +80,7 @@ def book(db, msg_obj: Message, beg: datetime, end: datetime, certain: bool = Tru
     # Book slot
     ## Insert into MongoDB
     insert_resp = db.etios.insertOne({
-        "_id": beg_date, "end": end_date, 
+        "_id": beg, "end": end, 
         "username": msg_obj.sender_uname, "confirmed": certain
     })
 
@@ -98,12 +98,12 @@ def get_booked(db, msg_obj: Message, beg: datetime):
     bookings = db.etios.find({
         "$or": [   
             {  "$and": [
-                { "_id" : { "$gte": beg_date } },  
-                { "_id" : { "$lte": end_date } } 
+                { "_id" : { "$gte": beg } },  
+                { "_id" : { "$lte": end } } 
             ] },  
             { "$and": [   
-                { "end" : { "$gte": beg_date } },  
-                { "end" : { "$lte": end_date } } 
+                { "end" : { "$gte": beg } },  
+                { "end" : { "$lte": end } } 
             ] }
         ] }).sort({ "_id": 1 })
 
