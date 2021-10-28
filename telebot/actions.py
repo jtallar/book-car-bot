@@ -79,7 +79,7 @@ def book(db, msg_obj: Message, beg: datetime, end: datetime, certain: bool = Tru
 
     # Book slot
     ## Insert into MongoDB
-    insert_resp = db.etios.insertOne({
+    insert_resp = db.etios.insert_one({
         "_id": beg, "end": end, 
         "username": msg_obj.sender_uname, "confirmed": certain
     })
