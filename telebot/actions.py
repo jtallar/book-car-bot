@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import pytz
+import pymongo
 
 # get current timezone
 timezone = pytz.timezone('America/Argentina/Buenos_Aires')
@@ -21,7 +22,7 @@ def send_photo(bot, chat_id, msg_id, photo_url):
     bot.sendChatAction(chat_id=chat_id, action="upload_photo")
     bot.sendPhoto(chat_id=chat_id, photo=photo_url, reply_to_message_id=msg_id)
 
-def start(msg_obj: Message):
+def start(db, msg_obj: Message):
     bot_welcome = """
 		Welcome to BookEtios bot, available commands are: \n
         - /book from to [certain] --> /book 2021-10-25T00:05:00 2021-10-25T00:09:00 false
@@ -32,7 +33,7 @@ def start(msg_obj: Message):
 		"""
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, bot_welcome)
 
-def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
+def book(db, msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     print(f'Args - beg: {beg} - end: {end} - certain: {certain}')
 
     now_date = get_now_datetime()
@@ -49,22 +50,71 @@ def book(msg_obj: Message, beg: datetime, end: datetime, certain: bool = True):
     ### (begPrevX <= end <= endPrevX) ||
     ### (beg <= begPrevX <= end) ||
     ### (beg <= endPrevX <= end)
+    collision_count = db.etios.find({ 
+        "$or": [  
+            { "$and": [  
+                { "_id" : { "$lte": beg } }, 
+                { "end" : { "$gte": beg } } 
+            ] }, 
+            { "$and": [  
+                { "_id" : { "$lte": end } }, 
+                { "end" : { "$gte": end } } 
+            ] }, 
+            { "$and": [  
+                { "_id" : { "$gte": beg } }, 
+                { "_id" : { "$lte": end } } 
+            ] }, 
+            { "$and": [  
+                { "end" : { "$gte": beg } }, 
+                { "end" : { "$lte": end } } 
+            ] } 
+        ] }).count()
+
+    print(f'Collided: {collision_count}')
+
+    # If collisions exist, cannot book
+    if collision_count > 0:
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Collision with other bookings!")
+        return
 
     # Book slot
     ## Insert into MongoDB
+    insert_resp = db.etios.insertOne({
+        "_id": beg_date, "end": end_date, 
+        "username": msg_obj.sender_uname, "confirmed": certain
+    })
+
+    print("Insert response: ")
+    print(insert_resp)
 
     # Send book confirmation
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Etios booked successfully!")
 
-    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
-
-def get_booked(msg_obj: Message, beg: datetime):
+def get_booked(db, msg_obj: Message, beg: datetime):
     print(f'Args - beg: {beg}')
     # Get beg's booked
-    ## Find one with beg? Or find all booked from beg to beg+1 (if its a date)?
+    ## Find all booked from beg to beg+1
+    
+    bookings = db.etios.find({
+        "$or": [   
+            {  "$and": [
+                { "_id" : { "$gte": beg_date } },  
+                { "_id" : { "$lte": end_date } } 
+            ] },  
+            { "$and": [   
+                { "end" : { "$gte": beg_date } },  
+                { "end" : { "$lte": end_date } } 
+            ] }
+        ] }).sort({ "_id": 1 })
 
+    print("Get bookings response: ")
+    print(bookings)
+
+    # TODO: I will need to convert from UTC to here
+    # TODO: Build message with all bookings
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
-def unbook(msg_obj: Message, beg: datetime):
+def unbook(db, msg_obj: Message, beg: datetime):
     print(f'Args - beg: {beg}')
     # Check if beg is booked by msg_obj.sender_uname
     ## Find one with beg
@@ -76,13 +126,13 @@ def unbook(msg_obj: Message, beg: datetime):
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
-def my_booked(msg_obj: Message):
+def my_booked(db, msg_obj: Message):
     # Get msg_obj.sender_uname booked
     ## Find all by username from the future
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
 
-def confirm(msg_obj: Message, beg: datetime):
+def confirm(db, msg_obj: Message, beg: datetime):
     # Get msg_obj.sender_uname booked
     ## Find one with beg
     ## Check owner
@@ -95,7 +145,7 @@ def confirm(msg_obj: Message, beg: datetime):
 
 def get_datetime(text: str):
     if text == 'today' or text == 'hoy':
-        return get_now_datetime()
+        return get_now_datetime() + timedelta(minutes=1)
     elif text == 'tomorrow' or text == 'mañana':
         return get_now_datetime() + timedelta(days=1)
     elif text == 'day after tomorrow' or text == 'pasado':

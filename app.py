@@ -72,7 +72,7 @@ def respond():
 
 	# start()
 	if command == "/start" or command == "/help":
-		actions.start(msg_obj)
+		actions.start(db, msg_obj)
 
 	# book(from: datetime, to: datetime, certain: bool = True)
 	elif command == "/book":
@@ -110,7 +110,7 @@ def respond():
 			actions.send_message(bot, chat_id, msg_id, "Invalid date")
 			return 'ok'
 
-		actions.get_booked(msg_obj, beg_date)
+		actions.get_booked(db, msg_obj, beg_date)
 	
 	# unbook(from: datetime)
 	elif command == "/unbook":
@@ -126,7 +126,7 @@ def respond():
 			actions.send_message(bot, chat_id, msg_id, "Invalid date")
 			return 'ok'
 
-		actions.unbook(msg_obj, beg_date)
+		actions.unbook(db, msg_obj, beg_date)
 
 	# confirm(from: datetime)
 	elif command == "/confirm":
@@ -142,11 +142,11 @@ def respond():
 			actions.send_message(bot, chat_id, msg_id, "Invalid date")
 			return 'ok'
 
-		actions.confirm(msg_obj, beg_date)
+		actions.confirm(db, msg_obj, beg_date)
 
 	# my_booked()
 	elif command == "/myBooked":
-		actions.my_booked(msg_obj)
+		actions.my_booked(db, msg_obj)
 
 	else:
 		# send a welcoming message
