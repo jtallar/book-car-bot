@@ -105,7 +105,7 @@ def get_booked(db, msg_obj: Message, beg: datetime):
             ] }
         ] }).sort("_id", 1)
 
-    response = f'Bookings for {beg}: \n'
+    response = f'Bookings for {print_datetime(beg)}: \n'
     response += print_bookings_list(bookings)
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
@@ -139,8 +139,6 @@ def my_booked(db, msg_obj: Message):
 
     response = f'Bookings for {msg_obj.sender_uname}: \n'
     response += print_bookings_list(bookings)
-
-    print(response)
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
