@@ -112,7 +112,7 @@ def get_booked(db, msg_obj: Message, beg: datetime):
 
     response = f'Bookings for {beg}: \n'
     for booking in bookings:
-        response += f'- From {booking._id} to {booking.end} _by {booking.username}_, *{"confirmed" if booking.confirmed else "NOT certain"}*\n'
+        response += f"- From {booking.get('_id')} to {booking.get('end')} _by {booking.get('username')}_, *{'confirmed' if booking.get('confirmed') else 'NOT certain'}*\n"
 
     # TODO: I will need to convert from UTC to here?
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response)
