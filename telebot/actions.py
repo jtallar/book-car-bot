@@ -181,7 +181,7 @@ def print_datetime(date_obj: datetime):
 def print_bookings_list(bookings_list):
     response = ""
     for booking in bookings_list:
-        response += f"- From {print_datetime(shift_timezone(booking.get('_id')))}" 
+        response += f"\- From {print_datetime(shift_timezone(booking.get('_id')))}" 
         response += f" to {print_datetime(shift_timezone(booking.get('end')))}"
         response += f" _by {booking.get('username')}_," 
         response += f"*{'confirmed' if booking.get('confirmed') else 'NOT certain'}*\n"
