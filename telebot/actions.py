@@ -110,12 +110,12 @@ def get_booked(db, msg_obj: Message, beg: datetime):
             ] }
         ] }).sort("_id", 1)
 
-    print("Get bookings response: ")
-    print(bookings)
+    response = f'Bookings for {beg}: \n'
+    for booking in bookings:
+        response += f'- From {booking._id} to {booking.end} _by {booking.username}_, *{"confirmed" if booking.confirmed else "NOT certain"}*\n'
 
-    # TODO: I will need to convert from UTC to here
-    # TODO: Build message with all bookings
-    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Not implemented (yet)")
+    # TODO: I will need to convert from UTC to here?
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response)
 
 def unbook(db, msg_obj: Message, beg: datetime):
     print(f'Args - beg: {beg}')
