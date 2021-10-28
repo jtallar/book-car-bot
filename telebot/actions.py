@@ -26,11 +26,11 @@ def send_photo(bot, chat_id, msg_id, photo_url):
 def start(db, msg_obj: Message):
     bot_welcome = """
 		Welcome to BookEtios bot, available commands are: \n
-        - /book from to [certain] --> /book 2021-10-25T00:05:00 2021-10-25T00:09:00 false
-        - /getBooked from --> /getBooked 2021-10-25
-        - /unbook from --> /unbook 2021-10-25T00:05:00
-        - /myBooked --> /myBooked
-        - /confirm from --> /confirm 2021-10-25T00:05:00
+        👉 /book from to [certain] ➡️ /book 2021-10-25T00:05:00 2021-10-25T00:09:00 false
+        👉 /getBooked from ➡️ /getBooked 2021-10-25
+        👉 /unbook from ➡️ /unbook 2021-10-25T00:05:00
+        👉 /myBooked ➡️ /myBooked
+        👉 /confirm from ➡️ /confirm 2021-10-25T00:05:00
 		"""
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, bot_welcome)
 
@@ -39,7 +39,7 @@ def book(db, msg_obj: Message, beg: datetime, end: datetime, certain: bool = Tru
 
     # Check if beg < end and beg >= now
     if beg >= end or beg < now_date:
-        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Invalid dates")
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "❌ Invalid dates ❌")
         return
 
     # Check if slot is available
@@ -71,7 +71,7 @@ def book(db, msg_obj: Message, beg: datetime, end: datetime, certain: bool = Tru
 
     # If collisions exist, cannot book
     if collision_count > 0:
-        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Collision with other bookings!")
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "💥 Collision with other bookings! 💥")
         return
 
     # Book slot
@@ -82,11 +82,11 @@ def book(db, msg_obj: Message, beg: datetime, end: datetime, certain: bool = Tru
     })
 
     if not insert_resp.inserted_id:
-        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Error inserting, try again later!")
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "❌ Error inserting, try again later! ❌")
         return
 
     # Send book confirmation
-    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Etios booked successfully!")
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "✅ Etios booked successfully!")
 
 def get_booked(db, msg_obj: Message, beg: datetime):
     # Get beg's booked
@@ -105,7 +105,7 @@ def get_booked(db, msg_obj: Message, beg: datetime):
             ] }
         ] }).sort("_id", 1)
 
-    response = f'Bookings from {print_datetime(beg)} to {print_datetime(end)}: \n'
+    response = f'🗓️ Bookings from {print_datetime(beg)} to {print_datetime(end)}: \n'
     response += print_bookings_list(bookings)
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
@@ -121,10 +121,10 @@ def unbook(db, msg_obj: Message, beg: datetime):
 
     if delete_resp.deleted_count == 0:
         # booking does not exist
-        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "❌ No booking found!")
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "❌ No booking found! ❌")
         return
 
-    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Unbooked successfully!")
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "✅ Unbooked successfully!")
 
 def my_booked(db, msg_obj: Message):
     now_date = get_now_datetime()
@@ -137,7 +137,7 @@ def my_booked(db, msg_obj: Message):
             { "username" : msg_obj.sender_uname } ] 
         }).sort("_id", 1)
 
-    response = f'Bookings for {msg_obj.sender_uname}: \n'
+    response = f'🗓️ Bookings for {msg_obj.sender_uname}: \n'
     response += print_bookings_list(bookings)
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
@@ -154,10 +154,10 @@ def confirm(db, msg_obj: Message, beg: datetime):
 
     if update_resp.modified_count == 0:
         # booking does not exist
-        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "No uncertain booking found!")
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "❌ No uncertain booking found! ❌")
         return
 
-    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Confirmed successfully!")
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "✅ Confirmed successfully!")
 
 def get_datetime(text: str):
     if text == 'today' or text == 'hoy':
@@ -181,9 +181,9 @@ def print_datetime(date_obj: datetime):
 def print_bookings_list(bookings_list):
     response = ""
     for booking in bookings_list:
-        response += f"\\- From {print_datetime(shift_timezone(booking.get('_id')))}" 
+        response += f"👉 From {print_datetime(shift_timezone(booking.get('_id')))}" 
         response += f" to {print_datetime(shift_timezone(booking.get('end')))}"
-        response += f" _by {booking.get('username')}_," 
+        response += f" ✍️ _{booking.get('username')}_," 
         response += f" *{'confirmed' if booking.get('confirmed') else 'NOT certain'}*\n"
 
     return response
