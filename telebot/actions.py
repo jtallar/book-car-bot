@@ -108,7 +108,7 @@ def get_booked(db, msg_obj: Message, beg: datetime):
                 { "end" : { "$gte": beg } },  
                 { "end" : { "$lte": end } } 
             ] }
-        ] }).sort({ "_id": 1 })
+        ] }).sort("_id", 1)
 
     print("Get bookings response: ")
     print(bookings)
