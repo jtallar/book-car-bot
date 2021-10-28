@@ -98,7 +98,7 @@ def respond():
 		)
 	
 	# get_booked(from: date)
-	elif command == "/getBooked":
+	elif command == "/getbooked":
 		if len(args_vec) < 2:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "Missing arguments")
@@ -146,7 +146,7 @@ def respond():
 		actions.confirm(db, msg_obj, beg_date)
 
 	# my_booked()
-	elif command == "/myBooked":
+	elif command == "/mybooked":
 		actions.my_booked(db, msg_obj)
 
 	else:

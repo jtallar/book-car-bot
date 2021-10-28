@@ -84,8 +84,9 @@ def book(db, msg_obj: Message, beg: datetime, end: datetime, certain: bool = Tru
         "username": msg_obj.sender_uname, "confirmed": certain
     })
 
-    print("Insert response: ")
-    print(insert_resp)
+    if not insert_resp.inserted_id:
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Error inserting, try again later!")
+        return
 
     # Send book confirmation
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Etios booked successfully!")
