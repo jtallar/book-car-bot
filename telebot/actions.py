@@ -96,6 +96,8 @@ def get_booked(db, msg_obj: Message, beg: datetime):
     # Get beg's booked
     ## Find all booked from beg to beg+1
     
+    end = beg + timedelta(days=1)
+
     bookings = db.etios.find({
         "$or": [   
             {  "$and": [
