@@ -14,9 +14,9 @@ class Message(object):
         self.sender_uname = sender_uname
         self.text = text
 
-def send_message(bot, chat_id, msg_id, text):
+def send_message(bot, chat_id, msg_id, text, parse_mode=None):
     bot.sendChatAction(chat_id=chat_id, action="typing")
-    bot.sendMessage(chat_id=chat_id, text=text, reply_to_message_id=msg_id, parse_mode=telegram.ParseMode.MARKDOWN_V2)
+    bot.sendMessage(chat_id=chat_id, text=text, reply_to_message_id=msg_id, parse_mode=parse_mode)
 
 def send_photo(bot, chat_id, msg_id, photo_url):
     # note that you can send photos by url and telegram will fetch it for you
@@ -108,7 +108,7 @@ def get_booked(db, msg_obj: Message, beg: datetime):
     response = f'Bookings for {beg}: \n'
     response += print_bookings_list(bookings)
 
-    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response)
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
 def unbook(db, msg_obj: Message, beg: datetime):
     # Unbook slot
@@ -140,7 +140,7 @@ def my_booked(db, msg_obj: Message):
     response = f'Bookings for {msg_obj.sender_uname}: \n'
     response += print_bookings_list(bookings)
 
-    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response)
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
 def confirm(db, msg_obj: Message, beg: datetime):
     # Confirm slot
