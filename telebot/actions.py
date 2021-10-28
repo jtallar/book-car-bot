@@ -154,7 +154,7 @@ def confirm(db, msg_obj: Message, beg: datetime):
 
     if update_resp.modified_count == 0:
         # booking does not exist
-        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "No booking found!")
+        send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "No uncertain booking found!")
         return
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "Confirmed successfully!")
