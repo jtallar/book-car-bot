@@ -62,6 +62,10 @@ def respond():
 	# Telegram understands UTF-8, so encode text for unicode compatibility
 	text = update.message.text.encode('utf-8').decode().lower()
 
+	# exit if text is not a command
+	if text[0] != '/':
+		return 'ok'
+
 	msg_obj = actions.Message(bot, chat_id, msg_id, sender_uname, text)
 
 	# for debugging purposes only
