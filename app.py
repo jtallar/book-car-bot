@@ -87,7 +87,7 @@ def respond():
 
 		try:
 			beg_date = actions.get_datetime(args_vec[1])
-			end_date = actions.get_datetime(args_vec[2])
+			end_date = actions.get_datetime(args_vec[2], beg_date)
 		except ValueError:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "❌ Invalid dates ❌")

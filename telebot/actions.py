@@ -1,5 +1,6 @@
 import telegram
 from datetime import datetime, timedelta
+import dateparser
 import pytz
 import pymongo
 
@@ -180,7 +181,26 @@ def confirm(db, msg_obj: Message, beg: datetime):
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "✅ Confirmed successfully!")
 
-def get_datetime(text: str):
+PARSER_SETTINGS_BASE = {
+    'TIMEZONE': 'America/Argentina/Buenos_Aires',
+    # 'RETURN_AS_TIMEZONE_AWARE': True, # TODO: Ver si hay que ponerlo
+    'PREFER_DATES_FROM': 'future'
+}
+
+def get_parser_settings(relative_base: datetime = None):
+    settings = PARSER_SETTINGS_BASE
+    if relative_base:
+        settings['RELATIVE_BASE'] = relative_base
+    
+    return settings
+
+def get_datetime(text: str, relative_base: datetime = None):
+    parsed_date = dateparser.parse(text, settings=get_parser_settings(relative_base))
+
+    # If nothing was parsed (parsed_date == None), continue with this flow
+    if parsed_date is not None:
+        return parsed_date
+
     if text == 'today' or text == 'hoy':
         return get_now_datetime() + timedelta(minutes=1)
     elif text == 'tomorrow' or text == 'mañana':
