@@ -26,11 +26,12 @@ def send_photo(bot, chat_id, msg_id, photo_url):
 def start(db, msg_obj: Message):
     bot_welcome = """
 		Welcome to BookEtios bot, available commands are: \n
-        👉 /book from to [certain] ➡️ /book 2021-10-25T00:05:00 2021-10-25T00:09:00 false
-        👉 /getBooked from ➡️ /getBooked 2021-10-25
-        👉 /unbook from ➡️ /unbook 2021-10-25T00:05:00
-        👉 /myBooked ➡️ /myBooked
-        👉 /confirm from ➡️ /confirm 2021-10-25T00:05:00
+        👉 /book from to [certain] ➡️ book etios at [from, to] with given certainty. Eg: /book 2021-10-25T00:05:00 2021-10-25T00:09:00 false
+        👉 /getBooked from ➡️ get all bookings from that date. Eg: /getBooked 2021-10-25
+        👉 /getBooked ➡️ get all bookings
+        👉 /unbook from ➡️ Unbook from appointment. Eg: /unbook 2021-10-25T00:05:00
+        👉 /myBooked ➡️ get my bookings
+        👉 /confirm from ➡️ Confirm uncertain booking. Eg: /confirm 2021-10-25T00:05:00
 		"""
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, bot_welcome)
 
@@ -106,6 +107,26 @@ def get_booked(db, msg_obj: Message, beg: datetime):
         ] }).sort("_id", 1)
 
     response = f'🗓️ Bookings from {print_datetime(beg)} to {print_datetime(end)}: \n\n'
+    response += print_bookings_list(bookings)
+
+    send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)
+
+def get_all_booked(db, msg_obj: Message):
+    # Get all booked from today
+    ## Find all booked from beg to the end of times
+    beg = get_now_datetime()
+
+    bookings = db.etios.find({
+        "$or": [   
+            {  "$and": [
+                { "_id" : { "$gte": beg } }
+            ] },  
+            { "$and": [   
+                { "end" : { "$gte": beg } } 
+            ] }
+        ] }).sort("_id", 1)
+
+    response = f'🗓️ All Future Bookings: \n\n'
     response += print_bookings_list(bookings)
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, response, parse_mode=telegram.ParseMode.MARKDOWN_V2)

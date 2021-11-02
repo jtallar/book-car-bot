@@ -103,19 +103,20 @@ def respond():
 	
 	# get_booked(from: date)
 	elif command == "/getbooked":
+		# if no date is provided, get all bookings
 		if len(args_vec) < 2:
-			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
-			return 'ok'
+			actions.get_all_booked(db, msg_obj)
 
-		try:
-			beg_date = actions.get_datetime(args_vec[1])
-		except ValueError:
-			# send a missing params message
-			actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")
-			return 'ok'
+		# if a date is provided, get all bookings from that day
+		else:
+			try:
+				beg_date = actions.get_datetime(args_vec[1])
+			except ValueError:
+				# send a missing params message
+				actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")
+				return 'ok'
 
-		actions.get_booked(db, msg_obj, beg_date)
+			actions.get_booked(db, msg_obj, beg_date)
 	
 	# unbook(from: datetime)
 	elif command == "/unbook":
