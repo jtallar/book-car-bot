@@ -209,7 +209,8 @@ def get_datetime(text: str, relative_base: datetime = get_now_datetime()):
 
     # If nothing was parsed (parsed_date == None), continue with this flow
     if parsed_date is not None:
-        return timezone.localize(parsed_date)
+        return parsed_date
+        # return timezone.localize(parsed_date)
 
     if text == 'today' or text == 'hoy':
         return get_now_datetime() + timedelta(minutes=1)
