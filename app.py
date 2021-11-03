@@ -69,7 +69,7 @@ def respond():
 	msg_obj = actions.Message(bot, chat_id, msg_id, sender_uname, text)
 
 	# for debugging purposes only
-	print("got text message :", text)
+	# print("got text message :", text)
 
 	# expect /command arg1-arg2-arg3
 	args = text.split(' ', 1)

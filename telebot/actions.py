@@ -184,8 +184,6 @@ def confirm(db, msg_obj: Message, beg: datetime):
 def is_text_false(text: str):
     return text == 'false' or text == 'f'
 
-# TODO: Problema de tz, mañana ya es jueves!
-
 PARSER_SETTINGS_BASE = {
     'TIMEZONE': 'America/Argentina/Buenos_Aires',
     'RETURN_AS_TIMEZONE_AWARE': True,
@@ -205,12 +203,9 @@ def get_now_datetime():
 def get_datetime(text: str, relative_base: datetime = get_now_datetime()):
     parsed_date = dateparser.parse(text, settings=get_parser_settings(relative_base))
 
-    print(parsed_date)
-
     # If nothing was parsed (parsed_date == None), continue with this flow
     if parsed_date is not None:
         return parsed_date
-        # return timezone.localize(parsed_date)
 
     if text == 'today' or text == 'hoy':
         return get_now_datetime() + timedelta(minutes=1)
