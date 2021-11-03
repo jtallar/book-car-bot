@@ -199,6 +199,9 @@ def get_parser_settings(relative_base: datetime = None):
     
     return settings
 
+def get_now_datetime():
+    return datetime.now(timezone)
+
 def get_datetime(text: str, relative_base: datetime = get_now_datetime()):
     parsed_date = dateparser.parse(text, settings=get_parser_settings(relative_base))
 
@@ -216,9 +219,6 @@ def get_datetime(text: str, relative_base: datetime = get_now_datetime()):
         return get_now_datetime() + timedelta(days=2)
 
     return timezone.localize(datetime.fromisoformat(text))
-
-def get_now_datetime():
-    return datetime.now(timezone)
 
 def shift_timezone(date_obj: datetime):
     return date_obj.astimezone(timezone)
