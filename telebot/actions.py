@@ -202,12 +202,9 @@ def get_parser_settings(relative_base: datetime = None):
 def get_datetime(text: str, relative_base: datetime = None):
     parsed_date = dateparser.parse(text, settings=get_parser_settings(relative_base))
 
-    print(f'Non: {parsed_date}')
-    print(f'Localized: {timezone.localize(parsed_date)}')
-
     # If nothing was parsed (parsed_date == None), continue with this flow
     if parsed_date is not None:
-        return parsed_date
+        return timezone.localize(parsed_date)
 
     if text == 'today' or text == 'hoy':
         return get_now_datetime() + timedelta(minutes=1)
