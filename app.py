@@ -71,8 +71,13 @@ def respond():
 	# for debugging purposes only
 	print("got text message :", text)
 
-	args_vec = text.split()
-	command = args_vec[0]
+	# expect /command arg1-arg2-arg3
+	args = text.split(' ', 1)
+	args_vec = []
+	if len(args) > 1:
+		args_vec = args[1].split('-')
+
+	command = args[0]
 
 	# start()
 	if command == "/start" or command == "/help":
@@ -80,14 +85,14 @@ def respond():
 
 	# book(from: datetime, to: datetime, certain: bool = True)
 	elif command == "/book":
-		if len(args_vec) < 3:
+		if len(args_vec) < 2:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
 			return 'ok'
 
 		try:
-			beg_date = actions.get_datetime(args_vec[1])
-			end_date = actions.get_datetime(args_vec[2], beg_date)
+			beg_date = actions.get_datetime(args_vec[0])
+			end_date = actions.get_datetime(args_vec[1], beg_date)
 		except ValueError:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "❌ Invalid dates ❌")
@@ -98,19 +103,19 @@ def respond():
 			msg_obj, 
 			beg_date, 
 			end_date, 
-			False if len(args_vec) >= 4 and args_vec[3] == 'false' else True
+			False if len(args_vec) >= 3 and actions.is_text_false(args_vec[2]) else True
 		)
 	
 	# get_booked(from: date)
 	elif command == "/getbooked":
 		# if no date is provided, get all bookings
-		if len(args_vec) < 2:
+		if len(args_vec) < 1:
 			actions.get_all_booked(db, msg_obj)
 
 		# if a date is provided, get all bookings from that day
 		else:
 			try:
-				beg_date = actions.get_datetime(args_vec[1])
+				beg_date = actions.get_datetime(args_vec[0])
 			except ValueError:
 				# send a missing params message
 				actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")
@@ -120,13 +125,13 @@ def respond():
 	
 	# unbook(from: datetime)
 	elif command == "/unbook":
-		if len(args_vec) < 2:
+		if len(args_vec) < 1:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
 			return 'ok'
 
 		try:
-			beg_date = actions.get_datetime(args_vec[1])
+			beg_date = actions.get_datetime(args_vec[0])
 		except ValueError:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")
@@ -136,13 +141,13 @@ def respond():
 
 	# confirm(from: datetime)
 	elif command == "/confirm":
-		if len(args_vec) < 2:
+		if len(args_vec) < 1:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "❌ Missing arguments ❌")
 			return 'ok'
 
 		try:
-			beg_date = actions.get_datetime(args_vec[1])
+			beg_date = actions.get_datetime(args_vec[0])
 		except ValueError:
 			# send a missing params message
 			actions.send_message(bot, chat_id, msg_id, "❌ Invalid date ❌")

@@ -27,12 +27,12 @@ def send_photo(bot, chat_id, msg_id, photo_url):
 def start(db, msg_obj: Message):
     bot_welcome = """
 		Welcome to BookEtios bot, available commands are: \n
-        👉 /book from to [certain] ➡️ book etios at [from, to] with given certainty. Eg: /book 2021-10-25T00:05:00 2021-10-25T00:09:00 false
-        👉 /getBooked from ➡️ get all bookings from that date. Eg: /getBooked 2021-10-25
+        👉 /book from-to-[certain] ➡️ book etios at [from, to] with given certainty. Eg: /book today 16:00-18:00, /book today 16:00-18:00-F
+        👉 /getBooked from ➡️ get all bookings from that date. Eg: /getBooked friday
         👉 /getBooked ➡️ get all bookings
-        👉 /unbook from ➡️ Unbook from appointment. Eg: /unbook 2021-10-25T00:05:00
+        👉 /unbook from ➡️ Unbook from appointment. Eg: /unbook friday 16:00
         👉 /myBooked ➡️ get my bookings
-        👉 /confirm from ➡️ Confirm uncertain booking. Eg: /confirm 2021-10-25T00:05:00
+        👉 /confirm from ➡️ Confirm uncertain booking. Eg: /confirm friday 16:00
 		"""
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, bot_welcome)
 
@@ -180,6 +180,9 @@ def confirm(db, msg_obj: Message, beg: datetime):
         return
 
     send_message(msg_obj.bot, msg_obj.chat_id, msg_obj.msg_id, "✅ Confirmed successfully!")
+
+def is_text_false(text: str):
+    return text == 'false' or text == 'f'
 
 PARSER_SETTINGS_BASE = {
     'TIMEZONE': 'America/Argentina/Buenos_Aires',
