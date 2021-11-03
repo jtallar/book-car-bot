@@ -188,7 +188,7 @@ def is_text_false(text: str):
 
 PARSER_SETTINGS_BASE = {
     'TIMEZONE': 'America/Argentina/Buenos_Aires',
-    'RETURN_AS_TIMEZONE_AWARE': True, # TODO: Ver si hay que ponerlo
+    'RETURN_AS_TIMEZONE_AWARE': False, # TODO: Ver si hay que ponerlo
     'PREFER_DATES_FROM': 'future'
 }
 
@@ -202,7 +202,8 @@ def get_parser_settings(relative_base: datetime = None):
 def get_datetime(text: str, relative_base: datetime = None):
     parsed_date = dateparser.parse(text, settings=get_parser_settings(relative_base))
 
-    print(parsed_date)
+    print(f'Non: {parsed_date}')
+    print(f'Localized: {timezone.localize(parsed_date)}')
 
     # If nothing was parsed (parsed_date == None), continue with this flow
     if parsed_date is not None:
