@@ -202,6 +202,8 @@ def get_now_datetime():
 
 def get_datetime(text: str, relative_base: datetime = get_now_datetime()):
     parsed_date = dateparser.parse(text, settings=get_parser_settings(relative_base))
+    # reset seconds, microseconds to 0
+    parsed_date = parsed_date.replace(second=0, microsecond=0)
 
     # If nothing was parsed (parsed_date == None), continue with this flow
     if parsed_date is not None:
