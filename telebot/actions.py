@@ -187,7 +187,7 @@ def is_text_false(text: str):
 # TODO: Problema de tz, mañana ya es jueves!
 
 PARSER_SETTINGS_BASE = {
-    # 'TIMEZONE': 'America/Argentina/Buenos_Aires',
+    'TIMEZONE': 'America/Argentina/Buenos_Aires',
     # 'RETURN_AS_TIMEZONE_AWARE': False, # TODO: Ver si hay que ponerlo
     'PREFER_DATES_FROM': 'future'
 }
