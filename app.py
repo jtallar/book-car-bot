@@ -59,6 +59,10 @@ def respond():
 
 		return 'ok'
 
+	# exit if no message was sent (eg: audio file)
+	if update.message.text is None:
+		return 'ok'
+
 	# Telegram understands UTF-8, so encode text for unicode compatibility
 	text = update.message.text.encode('utf-8').decode().lower()
 
