@@ -199,7 +199,7 @@ def get_parser_settings(relative_base: datetime = None):
     
     return settings
 
-def get_datetime(text: str, relative_base: datetime = None):
+def get_datetime(text: str, relative_base: datetime = get_now_datetime()):
     parsed_date = dateparser.parse(text, settings=get_parser_settings(relative_base))
 
     print(f'Non: {parsed_date}')
