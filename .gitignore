@@ -135,4 +135,4 @@ dmypy.json
 .vscode/
 
 # Credentials file --> UNCOMMENT ONLY WHEN DEPLOYING TO MY GITHUB, NOT HEROKU
-# credentials.py
+telebot/credentials.py
